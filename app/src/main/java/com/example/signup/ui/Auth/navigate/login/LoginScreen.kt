@@ -19,16 +19,13 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.signup.R
-import com.example.signup.ui.navigate.main.MainViewModel
-import com.google.firebase.auth.FirebaseAuth
+import com.example.signup.ui.Auth.AuthViewModel
 
 @Composable
 fun LoginScreen(
-    viewModel: MainViewModel,
-    scaffoldState: ScaffoldState,
-//    showSnackbar: suspend (String) -> Unit,
-    onMoveLogout: () -> Unit,
     onMoveSignup: () -> Unit,
+    onGoogleLogin: () -> Unit,
+    login: (String?, String?) -> Unit,
 ) {
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
@@ -75,7 +72,7 @@ fun LoginScreen(
             keyboardActions = KeyboardActions(onGo = {
                 Log.d ("FocusTest", "success2")
                 focusManager.clearFocus()
-                viewModel.login(email = email, password = password, scaffoldState = scaffoldState, onMoveLogout = onMoveLogout)
+                login(email, password)
                 email=""
                 password=""
             })
@@ -84,7 +81,7 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             modifier = Modifier.fillMaxWidth(),
-            onClick = { viewModel.login(email = email, password = password, scaffoldState = scaffoldState, onMoveLogout = onMoveLogout) },
+            onClick = { login(email, password) },
             shape = RoundedCornerShape(8.dp),
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = Color.Gray,
@@ -106,7 +103,7 @@ fun LoginScreen(
         }
         Button(
             modifier = Modifier.fillMaxWidth(),
-            onClick = { },
+            onClick = { onGoogleLogin() },
             shape = RoundedCornerShape(8.dp),
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = Color.Gray,

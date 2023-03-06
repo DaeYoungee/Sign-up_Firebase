@@ -1,4 +1,4 @@
-package com.example.signup.ui.navigate.signup
+package com.example.signup.ui.Auth.navigate.signup
 
 import android.util.Log
 import androidx.compose.foundation.layout.*
@@ -16,10 +16,10 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.signup.ui.navigate.main.MainViewModel
+import com.example.signup.ui.Auth.AuthViewModel
 
 @Composable
-fun SignUpScreen(viewModel: MainViewModel, onMoveLogout: () -> Unit, scaffoldState: ScaffoldState) {
+fun SignUpScreen(signup: (String?, String?) -> Unit) {
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
 
@@ -65,12 +65,7 @@ fun SignUpScreen(viewModel: MainViewModel, onMoveLogout: () -> Unit, scaffoldSta
             keyboardActions = KeyboardActions(onGo = {
                 Log.d("FocusTest", "success2")
                 focusManager.clearFocus()
-                viewModel.signup(
-                    email = email,
-                    password = password,
-                    scaffoldState = scaffoldState,
-                    onMoveLogout = onMoveLogout
-                )
+                signup(email, password)
                 email = ""
                 password = ""
             })
@@ -81,12 +76,7 @@ fun SignUpScreen(viewModel: MainViewModel, onMoveLogout: () -> Unit, scaffoldSta
 
         Button(
             onClick = {
-                viewModel.signup(
-                    email = email,
-                    password = password,
-                    scaffoldState = scaffoldState,
-                    onMoveLogout = onMoveLogout
-                )
+                signup(email, password)
                 email = ""
                 password = ""
             },
