@@ -2,7 +2,6 @@ package com.example.signup.ui.navigate.signup
 
 import android.util.Log
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -14,22 +13,13 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.signup.R
 import com.example.signup.ui.navigate.main.MainViewModel
-import com.google.firebase.auth.FirebaseAuth
 
 @Composable
-fun LoginScreen(
-    viewModel: MainViewModel,
-    scaffoldState: ScaffoldState,
-//    showSnackbar: suspend (String) -> Unit,
-    onMoveLogout: () -> Unit,
-    onMoveSignup: () -> Unit,
-) {
+fun SignUpScreen(viewModel: MainViewModel, onMoveLogout: () -> Unit, scaffoldState: ScaffoldState) {
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
 
@@ -46,7 +36,7 @@ fun LoginScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(text = "Login...", fontSize = 30.sp)
+        Text(text = "Sign up...", fontSize = 30.sp)
         Spacer(modifier = Modifier.height(8.dp))
         Divider()
         Spacer(modifier = Modifier.height(24.dp))
@@ -54,7 +44,7 @@ fun LoginScreen(
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text(text = "email")},
+            label = { Text(text = "email") },
             maxLines = 1,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
             keyboardActions = KeyboardActions(onNext = {
@@ -68,59 +58,44 @@ fun LoginScreen(
             value = password,
             onValueChange = { password = it },
             placeholder = { Text(text = "password - 6 characters or more") },
-            label = { Text(text = "password")},
+            label = { Text(text = "password") },
             maxLines = 1,
             /* imeAction이 바뀌지 않음 나중에 바꿔보자 */
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Go),
             keyboardActions = KeyboardActions(onGo = {
-                Log.d ("FocusTest", "success2")
+                Log.d("FocusTest", "success2")
                 focusManager.clearFocus()
-                viewModel.login(email = email, password = password, scaffoldState = scaffoldState, onMoveLogout = onMoveLogout)
-                email=""
-                password=""
+                viewModel.signup(
+                    email = email,
+                    password = password,
+                    scaffoldState = scaffoldState,
+                    onMoveLogout = onMoveLogout
+                )
+                email = ""
+                password = ""
             })
 
         )
+
         Spacer(modifier = Modifier.height(16.dp))
+
         Button(
-            modifier = Modifier.fillMaxWidth(),
-            onClick = { viewModel.login(email = email, password = password, scaffoldState = scaffoldState, onMoveLogout = onMoveLogout) },
-            shape = RoundedCornerShape(8.dp),
+            onClick = {
+                viewModel.signup(
+                    email = email,
+                    password = password,
+                    scaffoldState = scaffoldState,
+                    onMoveLogout = onMoveLogout
+                )
+                email = ""
+                password = ""
+            },
             colors = ButtonDefaults.buttonColors(
-                backgroundColor = Color.Gray,
+                backgroundColor = Color(0xFF537FE7),
                 contentColor = Color.White
             )
         ) {
-            Text(text = "login")
-        }
-        Button(
-            modifier = Modifier.fillMaxWidth(),
-            onClick = { onMoveSignup() },
-            shape = RoundedCornerShape(8.dp),
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = Color.Gray,
-                contentColor = Color.White
-            )
-        ) {
-            Text(text = "sign up")
-        }
-        Button(
-            modifier = Modifier.fillMaxWidth(),
-            onClick = { },
-            shape = RoundedCornerShape(8.dp),
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = Color.Gray,
-                contentColor = Color.White
-            )
-        ) {
-            Icon(
-                modifier = Modifier.size(ButtonDefaults.IconSize),
-                painter = painterResource(id = R.drawable.google_icon),
-                contentDescription = "google certification",
-                tint = Color.Unspecified
-            )
-            Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
-            Text(text = "google certification")
+            Text(text = "sign up", fontSize = 15.sp)
         }
     }
 }
