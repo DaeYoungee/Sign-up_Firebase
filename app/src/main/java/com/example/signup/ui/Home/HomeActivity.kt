@@ -17,15 +17,16 @@ import com.google.firebase.auth.FirebaseAuth
 class HomeActivity : ComponentActivity() {
     // 로그아웃 구현을 위한 변수
     private var auth: FirebaseAuth = FirebaseAuth.getInstance()
-    private val gso = GoogleSignInOptions
-        .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-        .requestIdToken(getString(R.string.default_web_client_id))
-        .requestEmail()
-        .build()
-    private var googleSignInClient:GoogleSignInClient = GoogleSignIn.getClient(this, gso)
+    private var googleSignInClient:GoogleSignInClient? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val gso = GoogleSignInOptions
+            .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
         setContent {
             HomeScreen(logout = { logout() })
 
@@ -35,7 +36,7 @@ class HomeActivity : ComponentActivity() {
     // 로그아웃
     private fun logout() {
         auth.signOut()
-        googleSignInClient.signOut()
+        googleSignInClient?.signOut()
         startActivity(Intent(this, AuthActivity::class.java))
     }
 }
