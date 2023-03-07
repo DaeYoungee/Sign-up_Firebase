@@ -36,7 +36,7 @@ class HomeActivity : ComponentActivity() {
         auth.signOut()
         googleSignInClient?.signOut()
         saveData(loginEmail = null)
-        startActivity(Intent(this, LoginActivity::class.java))
+        finish()
     }
 
     // sharedpreference
