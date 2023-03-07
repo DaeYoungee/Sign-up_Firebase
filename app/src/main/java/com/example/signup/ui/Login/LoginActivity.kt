@@ -1,4 +1,4 @@
-package com.example.signup.ui.Auth
+package com.example.signup.ui.Login
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,10 +7,9 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
 import com.example.signup.R
-import com.example.signup.ui.Auth.navigate.main.MainScreen
 import com.example.signup.ui.Home.HomeActivity
+import com.example.signup.ui.Login.navigate.main.MainScreen
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -19,16 +18,23 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 
-class AuthActivity : ComponentActivity() {
+class LoginActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        val viewModel by viewModels<AuthViewModel>()
         super.onCreate(savedInstanceState)
         setContent {
+            val account = GoogleSignIn.getLastSignedInAccount(this)?.let {
+                startActivity(Intent(this, HomeActivity::class.java))
+            } ?: if (authEmail() != null) {
+                Log.d("TestLogin", "1 + ${authEmail()}")
+                startActivity(Intent(this, HomeActivity::class.java))
+            } else {
+                Log.d("TestLogin", "${authEmail()}")
+            }
             MainScreen(
                 googleLogin = { googleLogin() },
                 signup = signup,
                 login = login,
-                logout = { logout() },
             )
         }
     }
@@ -84,7 +90,7 @@ class AuthActivity : ComponentActivity() {
 
 
     // 이메일, 비밀번호 회원가입
-    val signup:(String?, String?) -> Unit = {email, password ->
+    val signup: (String?, String?) -> Unit = { email, password ->
         if (email.isNullOrBlank() || password.isNullOrBlank()) {
             Toast.makeText(this, "이메일과 비밀번호를 입력하세요", Toast.LENGTH_SHORT).show()
         } else {
@@ -107,21 +113,19 @@ class AuthActivity : ComponentActivity() {
     }
 
     // 이메일, 비밀번호 로그인
-    val login:(String?, String?) -> Unit = {email, password ->
+    val login: (String?, String?) -> Unit = { email, password ->
         if (email.isNullOrBlank() || password.isNullOrBlank()) {
             Toast.makeText(this, "이메일과 비밀번호를 입력하세요", Toast.LENGTH_SHORT).show()
         } else {
             auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Log.d("LoginTest", "show text")
                     if (checkAuth()) {
                         // 로그인 성공
                         this.email = email
-                        Log.d("LoginTest", "login success")
+                        saveData(email)
                         onMoveHome()
                     } else {
                         // 발송된 메일로 인증 확인을 안 한 경우
-
                         Log.d("LoginTest", "인증 fail")
                     }
                 } else {
@@ -133,15 +137,23 @@ class AuthActivity : ComponentActivity() {
 
     }
 
-    // 로그아웃
-    fun logout() {
-        auth.signOut()
-        this.email = null
-        startActivity(Intent(this, AuthActivity::class.java))
-    }
     // 홈 스크린 이동
-    fun onMoveHome() {
+    private fun onMoveHome() {
         startActivity(Intent(this, HomeActivity::class.java))
     }
+
+    // sharedpreference
+    private fun saveData(loginEmail: String?) {
+        val pref = getSharedPreferences("userEmail", MODE_PRIVATE) // shared key 설정
+        val edit = pref.edit() // 수정 모드
+        edit.putString("email", loginEmail) // 값 넣기
+        edit.apply() // 적용하기
+    }
+
+    private fun authEmail(): String? {
+        val pref = getSharedPreferences("userEmail", MODE_PRIVATE)
+        return pref.getString("email", null)
+    }
+
 
 }

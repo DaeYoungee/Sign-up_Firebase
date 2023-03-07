@@ -1,4 +1,4 @@
-package com.example.signup.ui.Auth
+package com.example.signup.ui.Login
 
 import android.util.Log
 import androidx.compose.material.ScaffoldState

@@ -19,7 +19,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.signup.R
-import com.example.signup.ui.Auth.AuthViewModel
 
 @Composable
 fun LoginScreen(

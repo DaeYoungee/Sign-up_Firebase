@@ -1,4 +1,4 @@
-package com.example.signup.ui.Auth.navigate.signup
+package com.example.signup.ui.Login.navigate.signup
 
 import android.util.Log
 import androidx.compose.foundation.layout.*
@@ -16,7 +16,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.signup.ui.Auth.AuthViewModel
 
 @Composable
 fun SignUpScreen(signup: (String?, String?) -> Unit) {

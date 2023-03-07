@@ -15,10 +15,10 @@
             android:name=".ui.Home.HomeActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.Auth.AuthActivity"
+            android:name=".ui.Login.AuthActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.Login.LoginActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.SignUp">

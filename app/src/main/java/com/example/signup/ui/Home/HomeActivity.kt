@@ -1,14 +1,12 @@
 package com.example.signup.ui.Home
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.example.signup.R
-import com.example.signup.ui.Auth.AuthActivity
 import com.example.signup.ui.Home.home.HomeScreen
+import com.example.signup.ui.Login.LoginActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -37,6 +35,15 @@ class HomeActivity : ComponentActivity() {
     private fun logout() {
         auth.signOut()
         googleSignInClient?.signOut()
-        startActivity(Intent(this, AuthActivity::class.java))
+        saveData(loginEmail = null)
+        startActivity(Intent(this, LoginActivity::class.java))
+    }
+
+    // sharedpreference
+    private fun saveData(loginEmail: String?) {
+        val pref = getSharedPreferences("userEmail", MODE_PRIVATE) // shared key 설정
+        val edit = pref.edit() // 수정 모드
+        edit.putString("email", loginEmail) // 값 넣기
+        edit.apply() // 적용하기
     }
 }

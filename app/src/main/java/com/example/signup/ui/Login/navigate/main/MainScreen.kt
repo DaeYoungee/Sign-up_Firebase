@@ -1,4 +1,4 @@
-package com.example.signup.ui.Auth.navigate.main
+package com.example.signup.ui.Login.navigate.main
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.signup.ui.Auth.navigate.signup.SignUpScreen
+import com.example.signup.ui.Login.navigate.signup.SignUpScreen
 import com.example.signup.ui.navigate.signup.LoginScreen
 
 class Route {
@@ -25,7 +25,6 @@ fun MainScreen(
     googleLogin: () -> Unit,
     signup: (String?, String?) -> Unit,
     login: (String?, String?) -> Unit,
-    logout: () -> Unit
 ) {
     val navController = rememberNavController()
     val scaffoldState = rememberScaffoldState()
