@@ -1,6 +1,7 @@
 package com.example.signup.ui.Login.navigate.signup
 
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -18,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun SignUpScreen(signup: (String?, String?) -> Unit) {
+fun SignUpScreen(signup: (String?, String?) -> Unit, onBack: () -> Unit) {
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
 
@@ -28,6 +29,12 @@ fun SignUpScreen(signup: (String?, String?) -> Unit) {
     var password by rememberSaveable {
         mutableStateOf("")
     }
+
+    BackHandler(enabled = true) {
+        onBack()
+        Log.d("backStackEntry", "성공")
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()

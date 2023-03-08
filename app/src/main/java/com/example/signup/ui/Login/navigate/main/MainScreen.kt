@@ -28,7 +28,6 @@ fun MainScreen(
 ) {
     val navController = rememberNavController()
     val scaffoldState = rememberScaffoldState()
-    val scope = rememberCoroutineScope()
 
     Scaffold(scaffoldState = scaffoldState) {
         Surface(modifier = Modifier.padding(it)) {
@@ -41,7 +40,7 @@ fun MainScreen(
                     )
                 }
                 composable(route = Route.SIGNUP_SCREEN) {
-                    SignUpScreen( signup = signup )
+                    SignUpScreen( signup = signup ) { navController.popBackStack() }
                 }
             }
         }

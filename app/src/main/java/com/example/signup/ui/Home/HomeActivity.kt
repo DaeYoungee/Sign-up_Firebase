@@ -2,20 +2,26 @@ package com.example.signup.ui.Home
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.example.signup.R
+import com.example.signup.data.User
 import com.example.signup.ui.Home.home.HomeScreen
 import com.example.signup.ui.Login.LoginActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class HomeActivity : ComponentActivity() {
     // 로그아웃 구현을 위한 변수
     private var auth: FirebaseAuth = FirebaseAuth.getInstance()
-    private var googleSignInClient:GoogleSignInClient? = null
+    private var googleSignInClient: GoogleSignInClient? = null
+    private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private var documentId = 1;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,8 +32,7 @@ class HomeActivity : ComponentActivity() {
             .build()
         googleSignInClient = GoogleSignIn.getClient(this, gso)
         setContent {
-            HomeScreen(logout = { logout() })
-
+            HomeScreen(logout = { logout() }, saveStore = { saveStore() })
         }
     }
 
@@ -46,4 +51,18 @@ class HomeActivity : ComponentActivity() {
         edit.putString("email", loginEmail) // 값 넣기
         edit.apply() // 적용하기
     }
+
+    private fun saveStore() {
+
+        val data = User(name = "정대영", email = auth.currentUser?.email.toString(), age = 24, isAdmin = false)
+        db.collection("users").document("user$documentId").set(data)
+            .addOnSuccessListener {
+                Toast.makeText(this, "데이터가 저정되었습니다.", Toast.LENGTH_SHORT).show()
+            }.addOnFailureListener {
+                Log.d("FAIL STORE DATA", " fail")
+            }
+        documentId++
+    }
+
+    private fun uploadImage(docId: String) {}
 }

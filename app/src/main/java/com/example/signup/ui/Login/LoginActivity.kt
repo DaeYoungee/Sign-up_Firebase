@@ -39,9 +39,10 @@ class LoginActivity : ComponentActivity() {
         }
     }
 
+    // 뒤로 두번 하면 종료 구현하자
     override fun onBackPressed() {
         super.onBackPressed()
-        finish()
+
     }
 
     var auth: FirebaseAuth = FirebaseAuth.getInstance() /* 파이어베어스 인증 객체 */
