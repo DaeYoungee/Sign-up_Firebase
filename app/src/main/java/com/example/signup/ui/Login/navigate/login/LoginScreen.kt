@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.signup.R
@@ -66,6 +67,7 @@ fun LoginScreen(
             placeholder = { Text(text = "password - 6 characters or more") },
             label = { Text(text = "password")},
             maxLines = 1,
+            visualTransformation = PasswordVisualTransformation(),
             /* imeAction이 바뀌지 않음 나중에 바꿔보자 */
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Go),
             keyboardActions = KeyboardActions(onGo = {
