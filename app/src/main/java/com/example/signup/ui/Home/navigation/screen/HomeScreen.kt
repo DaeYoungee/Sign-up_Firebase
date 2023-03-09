@@ -1,4 +1,4 @@
-package com.example.signup.ui.Home.home
+package com.example.signup.ui.Home.navigation.screen
 
 import android.util.Log
 import androidx.compose.foundation.layout.Column
@@ -12,12 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.unit.dp
-import com.google.firebase.firestore.FirebaseFirestore
 
 @Composable
 fun HomeScreen(logout: () -> Unit, saveStore: (String) -> Unit) {

@@ -1,18 +1,13 @@
 package com.example.signup.ui.Home
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.example.signup.R
 import com.example.signup.data.User
-import com.example.signup.ui.Home.home.HomeScreen
-import com.example.signup.ui.Login.LoginActivity
+import com.example.signup.ui.Home.navigation.*
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -20,8 +15,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.*
-
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 class HomeActivity : ComponentActivity() {
     // 로그아웃 구현을 위한 변수
     private var auth: FirebaseAuth = FirebaseAuth.getInstance()
@@ -39,14 +35,8 @@ class HomeActivity : ComponentActivity() {
             .build()
         googleSignInClient = GoogleSignIn.getClient(this, gso)
         setContent {
-            val navController = rememberNavController()
-            NavHost(navController = navController, startDestination = "home") {
-                composable(route = "home") {
-                    HomeScreen(logout = { logout() }, saveStore = saveStore)
 
-                }
-            }
-
+            MainScreenView(logout = {logout()}, saveStore = saveStore)
         }
     }
 
@@ -113,5 +103,4 @@ class HomeActivity : ComponentActivity() {
 
     }
 
-    private fun uploadImage(docId: String) {}
 }
