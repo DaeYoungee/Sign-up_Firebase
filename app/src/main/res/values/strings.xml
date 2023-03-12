@@ -3,4 +3,24 @@
     <string name="text_board">보드</string>
     <string name="text_timeline">타임라인</string>
     <string name="text_settings">설정</string>
+    <string name="text_transaction_title">중고거래 글쓰기</string>
+    <string name="text_complete">완료</string>
+    <string name="text_title">제목</string>
+    <string name="text_content">게시글 내용을 작성해주세요.</string>
+    <string name="text_category_choice">카테고리 선택</string>
+    카테고리 선택
+    <string name="text_digital">디지털</string>
+    <string name="text_home_product">생활가전</string>
+    <string name="text_furniture">가구/인테리어</string>
+    <string name="text_life_kitchen">생활/주방</string>
+    <string name="text_child_clothes">유아의류</string>
+    <string name="text_child_books">유아도서</string>
+    <string name="text_female_clothes">여성의류</string>
+    <string name="text_female_stuff">여성잡화</string>
+    <string name="text_male_clothes">남성패션</string>
+    <string name="text_beauty_">뷰티/미용</string>
+    <string name="text_sport">스포츠/레저</string>
+
+
+
 </resources>

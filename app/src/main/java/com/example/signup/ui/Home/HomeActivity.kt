@@ -5,9 +5,11 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import com.example.signup.R
+import com.example.signup.data.Post
 import com.example.signup.data.User
-import com.example.signup.ui.Home.navigation.*
+import com.example.signup.ui.Home.navigation.MainScreenView
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -18,6 +20,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+
 class HomeActivity : ComponentActivity() {
     // 로그아웃 구현을 위한 변수
     private var auth: FirebaseAuth = FirebaseAuth.getInstance()
@@ -25,6 +28,8 @@ class HomeActivity : ComponentActivity() {
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private var documentId = 1;
     private val currentUser: FirebaseUser? = auth.currentUser
+    private var isExecuted = false
+    val viewModel by viewModels<HomeViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +41,12 @@ class HomeActivity : ComponentActivity() {
         googleSignInClient = GoogleSignIn.getClient(this, gso)
         setContent {
 
-            MainScreenView(logout = {logout()}, saveStore = saveStore)
+            MainScreenView(
+                logout = { logout() },
+                documentCount = { documentCount() },
+                viewModel = viewModel,
+                getPost = { getPost() }
+            )
         }
     }
 
@@ -55,12 +65,10 @@ class HomeActivity : ComponentActivity() {
         edit.putString("email", loginEmail) // 값 넣기
         edit.apply() // 적용하기
     }
-    // firebase store에 저장
-    private val saveStore: (String) -> Unit = { name ->
-        Log.d("TAG", "saveStore: $name")
-        userUpdate(name = name)
 
-        Log.d("TAG", "saveStore + current.user: ${currentUser?.displayName}")
+    // firebase store에 저장
+    private val saveUserStore: (String) -> Unit = { name ->
+        userUpdate(name = name)
         CoroutineScope(Dispatchers.Default).launch {
             while (true) {
                 if (currentUser?.displayName.toString() == name) {
@@ -71,7 +79,9 @@ class HomeActivity : ComponentActivity() {
                         isAdmin = false,
                         uid = currentUser?.uid.toString(),
                     )
-                    db.collection("users").document("user$documentId").set(data)
+                    db.collection(
+                        "users"
+                    ).document("user$documentId").set(data)
                         .addOnSuccessListener {
                             Toast.makeText(applicationContext, "데이터가 저정되었습니다.", Toast.LENGTH_SHORT)
                                 .show()
@@ -82,12 +92,32 @@ class HomeActivity : ComponentActivity() {
                     break
                 }
             }
+        }
+    }
 
+    // 게시글 업로드
+    private val savePostStore: (Int) -> Unit = { count ->
+        val data = viewModel.post.value.copy()
+        viewModel.setPost(post = Post(title = "", category = application.getString(R.string.text_category_choice), content= ""))
 
+        db.collection("post").document("post${count}").set(data).addOnSuccessListener {
+            Toast.makeText(applicationContext, "데이터가 저정되었습니다.", Toast.LENGTH_SHORT).show()
+        }.addOnFailureListener {
+            Log.d("TAG", " 왜 안될까 fail")
         }
 
 
+    }
 
+    // 현재 파이어스토어 도큐먼트 개수 확인 및 저장
+    private fun documentCount() {
+        db.collection("post").get().addOnSuccessListener { querySnapshot ->
+            Log.d("EXCEPTION", "현재 도큐먼트 개수: ${querySnapshot.size()}")
+            savePostStore(querySnapshot.size())
+            viewModel.setDocumentCount(querySnapshot.size())
+        }.addOnFailureListener { exception ->
+            Log.d("EXCEPTION", "도큐먼트 개수 실패${exception.message}")
+        }
     }
 
     // firebase 사용자 업데이트
@@ -101,6 +131,19 @@ class HomeActivity : ComponentActivity() {
             }
         }
 
+    }
+
+    private fun getPost() {
+        viewModel.setInitList()
+        db.collection("post").get().addOnSuccessListener {result ->
+            for (document in result) {
+                viewModel.setAddList(document.toObject(Post::class.java))
+                Log.d("MYTEST","${document.toObject(Post::class.java)}")
+            }
+            viewModel.setScreenState()
+        }.addOnFailureListener {
+            Log.d("EXCEPTION", "${it.message}")
+        }
     }
 
 }
